@@ -13,8 +13,6 @@ import * as fsAsync from 'fs/promises';
 export function resolvePath(subPath: string, fileName: string): string {
   const devPath = path.join(process.cwd(), `src/${subPath}`, fileName);
   const prodPath = path.join(__dirname, subPath, fileName);
-  console.log(prodPath, ' --- prodPath');
-  console.log(devPath, ' --- devPath');
   return fs.existsSync(devPath) ? devPath : prodPath;
 }
 
@@ -24,7 +22,7 @@ export function resolvePath(subPath: string, fileName: string): string {
  * @param subPath Path segment relative to project root, e.g., 'samples', 'logs'
  * @returns Full absolute path
  */
-export function generateRootPath(subPath: string): string {
+export function generatePathInRoot(subPath: string): string {
   return path.join(process.cwd(), subPath);
 }
 
@@ -42,7 +40,7 @@ export async function saveToDirectory(
   fileName: string,
   content: Buffer | string,
 ): Promise<string> {
-  const targetDir = generateRootPath(directory);
+  const targetDir = generatePathInRoot(directory);
   const filePath = path.join(targetDir, fileName);
 
   try {

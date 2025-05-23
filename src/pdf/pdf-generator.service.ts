@@ -15,7 +15,7 @@ import {
   renderTemplate,
   renderUsageDataRows,
 } from '../common/utils/table-renderer.util';
-import { defaultPdfOptions } from './configs/pdf.config';
+import { defaultPdfOptions } from './pdf.config';
 
 @Injectable()
 export class PdfGeneratorService {
