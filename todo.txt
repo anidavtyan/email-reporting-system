@@ -1,0 +1,6 @@
+// TODO test cases
+// TODO use config service for redis
+// TODO bull web ui to check jobs
+// TODO architecture diagram
+// TODO docker compose fix for real case
+// TODO make sure email sent once, when multiple instances are running. scheduling checked, sending not yet

@@ -1,0 +1,5 @@
+Dear {{recipientEmail}},
+
+Please find attached your daily email usage report for {{reportDate}}.
+
+Thank you.
