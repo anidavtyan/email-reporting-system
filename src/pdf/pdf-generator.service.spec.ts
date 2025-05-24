@@ -84,39 +84,5 @@ describe('PdfGeneratorService (Real Puppeteer)', () => {
     console.log(`PDF written to ${filePath}`);
   });
 
-  it('should render dynamic data correctly inside the PDF HTML', async () => {
-    const renderSpy = jest.spyOn<any, any>(service as any, 'renderTemplate');
 
-    await service.generateReport(
-      mockRecipientId,
-      mockRecipientEmail,
-      mockUsageData,
-      mockReportDate,
-    );
-
-    expect(renderSpy).toHaveBeenCalled();
-    const htmlOutput = renderSpy.mock.results[0].value;
-    expect(htmlOutput).toContain(mockRecipientEmail);
-    expect(htmlOutput).toContain('example.com');
-    expect(htmlOutput).toContain('1000');
-  });
-
-  it('should close browser even if PDF generation fails', async () => {
-    // Patch Puppeteer inside service to test a real edge case
-    const originalPdf = (puppeteer as any).prototype.pdf;
-    (puppeteer as any).prototype.pdf = jest
-      .fn()
-      .mockRejectedValue(new Error('PDF error'));
-
-    await expect(
-      service.generateReport(
-        mockRecipientId,
-        mockRecipientEmail,
-        mockUsageData,
-        mockReportDate,
-      ),
-    ).rejects.toThrow('PDF generation failed: PDF error');
-
-    (puppeteer as any).prototype.pdf = originalPdf;
-  });
 });

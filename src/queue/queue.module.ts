@@ -7,7 +7,7 @@ import { VolumeUsageModule } from '../volume-usage/volume-usage.module';
 import { PdfModule } from '../pdf/pdf.module';
 import { EmailDeliveryModule } from '../email-delivery/email-delivery.module';
 import { WebhookDeliveryModule } from '../webhook-delivery/webhook-delivery.module';
-import { DeliveryModule } from "../delivery/delivery.module";
+import { DeliveryModule } from '../delivery/delivery.module';
 
 @Module({
   imports: [

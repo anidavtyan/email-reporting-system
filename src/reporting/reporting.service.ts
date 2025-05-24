@@ -29,7 +29,6 @@ export class ReportingService implements OnModuleInit {
 
   // This cron job ensures that daily reports are scheduled reliably every day.
   // It's set to 07:00 UTC, the actual report generation time for recipients is localized later.
-  // TODO revisit logic 07:00
   @Cron(CronExpression.EVERY_DAY_AT_7AM)
   async handleDailyGlobalSchedule() {
     this.logger.log('Global daily report scheduling triggered by cron.');
@@ -60,13 +59,23 @@ export class ReportingService implements OnModuleInit {
           continue;
         }
 
-        const targetHour = 8; // 08:00 local time
-        const targetMinute = Math.floor(Math.random() * 51); // Random minute within 50minutes for distribution
+        const startHour = 7; // Start of the desired window
+        const endHour = 9; // End of the desired window (exclusive for minute 0)
+        const totalMinutesInWindow = (endHour - startHour) * 60; // 2 hours * 60 minutes = 120 minutes
 
-        // Calculate the next 08:00 in the recipient's timezone
+        // Generate a random minute offset within the 2-hour window (0 to 119 minutes)
+        const randomMinuteOffset = Math.floor(
+          Math.random() * totalMinutesInWindow,
+        );
+
         const nowInRecipientTimezone = toZonedTime(now, recipient.timezone);
         let targetTimeInRecipientTimezone = new Date(nowInRecipientTimezone);
-        targetTimeInRecipientTimezone.setHours(targetHour, targetMinute, 0, 0);
+
+        // Set the time to the start of the window (07:00:00)
+        targetTimeInRecipientTimezone.setHours(startHour, 0, 0, 0);
+        targetTimeInRecipientTimezone.setMinutes(
+          targetTimeInRecipientTimezone.getMinutes() + randomMinuteOffset,
+        );
 
         // If the calculated target time has already passed for the current day in their timezone,
         // schedule it for tomorrow at the same local time.

@@ -1,22 +1,38 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { AxiosInstance, AxiosResponse } from 'axios';
 import { DomainDto } from '../common/dtos/domain.dto';
-import { simulateDelay } from '../common/utils/delay.util';
-import { MOCK_DOMAINS } from '../common/mocks/domains.mock';
+import { createConfiguredAxiosInstance } from '../common/utils/axios-config.util';
 
 @Injectable()
 export class DomainService {
   private readonly logger = new Logger(DomainService.name);
-  private readonly mockDomains: DomainDto[] = MOCK_DOMAINS;
+  private readonly axios: AxiosInstance;
+  constructor(private readonly configService: ConfigService) {
+    const baseURL = this.configService.get<string>('DOMAIN_API_URL');
+
+    if (!baseURL) {
+      throw new Error('DOMAIN_API_URL is not defined in configuration.');
+    }
+    this.axios = createConfiguredAxiosInstance(
+      DomainService.name,
+      baseURL,
+      this.logger,
+    );
+  }
 
   async getDomainById(id: string): Promise<DomainDto> {
-    this.logger.log(`Mocking GET /domains/${id} API call...`);
-    // Simulate network latency
-    await simulateDelay(50, 200);
-
-    const domain = this.mockDomains.find((d) => d.id === id);
-    if (!domain) {
-      throw new NotFoundException(`Domain with ID ${id} not found.`);
+    try {
+      const response: AxiosResponse<DomainDto> = await this.axios.get(
+        `/domains/${id}`,
+      );
+      return response.data;
+    } catch (e) {
+      this.logger.error(
+        `Fetching domains by ${id} failed after retries`,
+        e.stack || e.message,
+      );
+      throw e;
     }
-    return domain;
   }
 }
