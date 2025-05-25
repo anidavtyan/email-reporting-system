@@ -36,7 +36,6 @@ This is a minimum-viable system for collecting email volume usage data, generati
 1.  **Clone the repository:**
     ```bash
     git clone https://github.com/anidavtyan/email-reporting-system.git
-    ```
     cd email-reporting-system
     ```
 
@@ -60,10 +59,11 @@ This is a minimum-viable system for collecting email volume usage data, generati
     REDIS_PORT=6379
 
     # URLs for the external mock APIs (adjust ports if necessary)
-    RECIPIENT_API_URL=http://localhost:3001/
-    DOMAIN_API_URL=http://localhost:3002/
-    VOLUME_USAGE_API_URL=http://localhost:3003/
-    EMAIL_SEND_API_URL=http://localhost:3004/
+    RECIPIENT_API_PORT=8000
+    RECIPIENT_API_URL=http://localhost:8000/api/
+
+    DOMAIN_API_PORT=8001
+    DOMAIN_API_URL=http://localhost:8001/api/
     ```
 
 5.  **Run Mock External API Servers:**
@@ -71,7 +71,7 @@ This is a minimum-viable system for collecting email volume usage data, generati
     Note: there are no mock servers for `volumn-usage` and `send-email` and `webhooks`  
 
     ```bash
-    # npm run mock all
+    # npm run mock:all
     ```
     *Ensure the ports in your `.env` file (`8000`, `8001`) match the ports these mock servers are configured to listen on.*
 
